@@ -1,0 +1,11 @@
+name: MineIDI
+version: '${version}'
+main: fr.modeetratheure.mineidi.MineIDI
+api-version: 1.19
+authors: [ ModeEtRatHeure ]
+description: A plugin to convert midi files into note blocks 
+commands:
+  read:
+    description: Pour lire le morceau a convertir en noteblock
+  build:
+    description: Pour construire le circuit correspondant au morceau choisi
