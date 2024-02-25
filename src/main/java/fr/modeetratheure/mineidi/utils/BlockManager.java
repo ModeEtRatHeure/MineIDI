@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Repeater;
 import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.util.Vector;
@@ -18,9 +19,19 @@ public class BlockManager {
     }
 
     public Block placeBlock(Material type, Location loc){
+        if(!loc.getChunk().isLoaded()){
+            loc.getChunk().load();
+        }
         Block block = Objects.requireNonNull(loc.getWorld()).getBlockAt(loc);
         block.setType(type);
         return block;
+    }
+
+    public void placeButton(Location loc, BlockFace face){
+        Block button = placeBlock(Material.STONE_BUTTON, loc);
+        BlockData btn = getBlockData(loc);
+        ((Directional) btn).setFacing(face);
+        button.setBlockData(btn);
     }
 
     public void placeRepeater(Location loc, int delay, StructureRotation rotation){
@@ -37,7 +48,7 @@ public class BlockManager {
         }
     }
 
-    private Location yLocChange(int offset, Location loc){
+    public Location yLocChange(int offset, Location loc){
         return loc.clone().add(0, offset, 0);
     }
 

@@ -1,5 +1,6 @@
 package fr.modeetratheure.mineidi.commands;
 
+import fr.modeetratheure.mineidi.MineIDI;
 import fr.modeetratheure.mineidi.builder.SongBuilder;
 import fr.modeetratheure.mineidi.midi.SongManager;
 import org.bukkit.ChatColor;
@@ -11,9 +12,11 @@ import org.bukkit.entity.Player;
 public class CommandBuildExecutor implements CommandExecutor {
 
     SongManager songManager;
+    private MineIDI mineIDI;
 
-    public CommandBuildExecutor(SongManager songManager){
+    public CommandBuildExecutor(SongManager songManager, MineIDI mineIDI){
         this.songManager = songManager;
+        this.mineIDI = mineIDI;
     }
 
     @Override
@@ -21,10 +24,10 @@ public class CommandBuildExecutor implements CommandExecutor {
         if(sender instanceof Player){
             if(args.length == 1){
                 String songName = args[0].startsWith("\"") && args[0].endsWith("\"") ? args[0].substring(1, args[0].length() - 2) : args[0];
-                SongBuilder songBuilder = new SongBuilder();
+                SongBuilder songBuilder = new SongBuilder(mineIDI);
                 if(songManager.contains(songName)){
+                    sender.sendMessage(ChatColor.GREEN + "Building the song..." + songName);
                     songBuilder.build(songManager.getSong(songName), ((Player) sender).getLocation());
-                    sender.sendMessage(ChatColor.GREEN + "Successfully built " + songName);
                     return true;
                 }
                 sender.sendMessage(ChatColor.RED + "Unregistered song.\nYou can register a song with the command: /read <songname>");

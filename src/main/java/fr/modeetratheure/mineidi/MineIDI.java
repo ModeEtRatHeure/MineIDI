@@ -16,7 +16,7 @@ public final class MineIDI extends JavaPlugin {
 
         SongManager songManager = new SongManager();
         Objects.requireNonNull(getCommand("read")).setExecutor(new CommandReadExecutor(songManager));
-        Objects.requireNonNull(getCommand("build")).setExecutor(new CommandBuildExecutor(songManager));
+        Objects.requireNonNull(getCommand("build")).setExecutor(new CommandBuildExecutor(songManager, this));
     }
 
 }
