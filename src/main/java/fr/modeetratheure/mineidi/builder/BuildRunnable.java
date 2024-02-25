@@ -22,6 +22,7 @@ class BuildRunnable extends BukkitRunnable {
     private final BlockManager blockManager;
     private final Location placeToStartBuilding;
     private final Vector direction;
+    private int locOffset = 0;
 
     public BuildRunnable(List<Pair<List<Note>, DelaysBox>> song, BlockManager blockManager, Location placeToStartBuilding, Vector direction){
         this.song = song;
@@ -32,7 +33,6 @@ class BuildRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        int locOffset = 0;
         for(Pair<List<Note>, DelaysBox> p:song.subList(currentStartingIndex, currentEndingIndex < song.size() ? currentEndingIndex : song.size() - 1)){
             Pair<Integer, Integer> redstoneCircuitData = p.getSecond().getRedstoneCircuitData();
             if(redstoneCircuitData.getFirst() > 0 | redstoneCircuitData.getSecond() != 0) {
