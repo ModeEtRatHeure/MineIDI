@@ -1,4 +1,4 @@
-package fr.modeetratheure.mineidi.midi;
+package fr.modeetratheure.mineidi.builder;
 
 import fr.modeetratheure.mineidi.music.DelaysBox;
 import fr.modeetratheure.mineidi.music.Note;
@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.NoteBlock;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -27,26 +28,33 @@ public class SongBuilder {
         int locOffset = 0;
         Vector direction = placeToStartBuilding.getDirection();
         blockManager = new BlockManager();
-        placeButton(placeToStartBuilding, blockManager.getBlockFaceFromDirection(direction.multiply(-1)));
-        for(Pair<List<Note>, DelaysBox> p:song.subList(0, 15)){
+        placeButton(placeToStartBuilding, blockManager.getBlockFaceFromDirection(direction));
+        for(Pair<List<Note>, DelaysBox> p:song.subList(0, 20)){
             Pair<Integer, Integer> redstoneCircuitData = p.getSecond().getRedstoneCircuitData();
             if(redstoneCircuitData.getFirst() > 0 | redstoneCircuitData.getSecond() != 0) {
-                locOffset += 1;
                 for (int i = 0; i < redstoneCircuitData.getFirst(); i++) {
+                    locOffset += 1;
                     blockManager.placeRepeater(
                             blockManager.offsetLocationAccordingDirection(placeToStartBuilding, direction, locOffset),
                             4,
                             blockManager.getRepeaterRotationFromDirection(direction)
                     );
-                    locOffset += 1;
                 }
                 if (redstoneCircuitData.getSecond() != 0) {
+                    locOffset += 1;
                     blockManager.placeRepeater(
                             blockManager.offsetLocationAccordingDirection(placeToStartBuilding, direction, locOffset),
                             redstoneCircuitData.getSecond(),
                             blockManager.getRepeaterRotationFromDirection(direction)
                     );
                 }
+            }else{
+                locOffset += 1;
+                blockManager.placeRepeater(
+                        blockManager.offsetLocationAccordingDirection(placeToStartBuilding, direction, locOffset),
+                        0,
+                        StructureRotation.NONE
+                );
             }
             locOffset += 1;
             int noteBlockOffset = - (int) (p.getFirst().size() / 2); //pour placer la ligne de noteblock de manière relativement symétrique par rapport à la ligne de redstone

@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public enum Sounds {
 
-    BANJO(Material.HAY_BLOCK, new Pair(104, 111)),
+    BANJO(Material.HAY_BLOCK, new Pair<>(104, 111)),
     /*BASS_DRUM(Material.STONE),*///TODO comprendre pk il n'est pas dans la liste
     BASS_GUITAR(Material.ACACIA_WOOD, new Pair<>(32, 39)),
     BELL(Material.GOLD_BLOCK, new Pair<>(8, 10)),

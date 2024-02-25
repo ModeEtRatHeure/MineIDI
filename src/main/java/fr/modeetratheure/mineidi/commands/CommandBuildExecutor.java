@@ -1,6 +1,6 @@
 package fr.modeetratheure.mineidi.commands;
 
-import fr.modeetratheure.mineidi.midi.SongBuilder;
+import fr.modeetratheure.mineidi.builder.SongBuilder;
 import fr.modeetratheure.mineidi.midi.SongManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

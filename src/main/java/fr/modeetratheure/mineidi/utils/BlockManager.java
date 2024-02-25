@@ -26,11 +26,15 @@ public class BlockManager {
     public void placeRepeater(Location loc, int delay, StructureRotation rotation){
         placeBlock(Material.STONE, loc);
         Location loc2 = yLocChange(1, loc);
-        Block repeater = placeBlock(Material.REPEATER, loc2);
-        Repeater repeaterData = (Repeater) getBlockData(loc2);
-        repeaterData.rotate(rotation);
-        repeaterData.setDelay(delay);
-        repeater.setBlockData(repeaterData);
+        if(delay > 0){
+            Block repeater = placeBlock(Material.REPEATER, loc2);
+            Repeater repeaterData = (Repeater) getBlockData(loc2);
+            repeaterData.rotate(rotation);
+            repeaterData.setDelay(delay);
+            repeater.setBlockData(repeaterData);
+        }else{
+            placeBlock(Material.REDSTONE_WIRE, loc2);
+        }
     }
 
     private Location yLocChange(int offset, Location loc){
@@ -39,36 +43,36 @@ public class BlockManager {
 
     public StructureRotation getRepeaterRotationFromDirection(Vector direction){
         if(Math.abs(direction.getX()) <= Math.abs(direction.getZ())){
-            return direction.getX() > 0d ? StructureRotation.NONE : StructureRotation.CLOCKWISE_180;
+            return direction.getX() <= 0d ? StructureRotation.NONE : StructureRotation.CLOCKWISE_180;
         }
-        return direction.getZ() > 0d ? StructureRotation.CLOCKWISE_90 : StructureRotation.COUNTERCLOCKWISE_90;
+        return direction.getZ() <= 0d ? StructureRotation.CLOCKWISE_90 : StructureRotation.COUNTERCLOCKWISE_90;
     }
 
     public BlockFace getBlockFaceFromDirection(Vector direction){
-        if(Math.abs(direction.getX()) >= Math.abs(direction.getY())){
-            return direction.getX() >= 0d ? BlockFace.EAST : BlockFace.WEST;
+        if(Math.abs(direction.getX()) >= Math.abs(direction.getZ())){
+            return direction.getX() <= 0d ? BlockFace.EAST : BlockFace.WEST;
         }
-        return direction.getZ() >= 0d ? BlockFace.SOUTH : BlockFace.NORTH;
+        return direction.getZ() <= 0d ? BlockFace.SOUTH : BlockFace.NORTH;
     }
 
     public Location offsetLocationAccordingDirection(Location loc, Vector direction, int offset){
         Vector roundedDirection;
-        direction.normalize();
-        if(Math.abs(direction.getX()) >= Math.abs(direction.getZ())){
-            roundedDirection = new Vector(direction.getX() * offset, 0, 0);
+        Vector directionBis = direction.clone().normalize();
+        if(Math.abs(directionBis.getX()) >= Math.abs(directionBis.getZ())){
+            roundedDirection = new Vector(directionBis.getX() * offset, 0, 0);
         }else{
-            roundedDirection = new Vector(0, 0, direction.getZ() * offset);
+            roundedDirection = new Vector(0, 0, directionBis.getZ() * offset);
         }
         return loc.clone().add(roundedDirection);
     }
 
     public Location offsetLocationAccordingNormalDirection(Location loc, Vector direction, int offset){
         Vector roundedDirection;
-        direction.normalize();
-        if(Math.abs(direction.getX()) <= Math.abs(direction.getZ())){
-            roundedDirection = new Vector(direction.getX() * offset, 0, 0);
+        Vector directionBis = direction.clone().normalize();
+        if(Math.abs(directionBis.getX()) <= Math.abs(directionBis.getZ())){
+            roundedDirection = new Vector(directionBis.getX() * offset, 0, 0);
         }else{
-            roundedDirection = new Vector(0, 0, direction.getZ() * offset);
+            roundedDirection = new Vector(0, 0, directionBis.getZ() * offset);
         }
         return loc.clone().add(roundedDirection);
     }
