@@ -18,9 +18,11 @@ public class MidiFileReader {
     private List<Pair<List<Note>, DelaysBox>> pairList;
     private final HashMap<Long, List<Note>> decodedSequence = new HashMap<>();
     private final int[] channelArray = new int[16];
+    private int tickToMcTickRatio;
 
     public List<Pair<List<Note>, DelaysBox>> read(String fileName) throws InvalidMidiDataException, IOException {
         Sequence seq = MidiSystem.getSequence(new File(fileName));
+        computeTickToMcTickRatio(seq);
         for(Track t:seq.getTracks()){
             for(int i = 0; i < t.size(); i++){
                 readMidiEvent(t.get(i));
@@ -37,7 +39,8 @@ public class MidiFileReader {
                 return;
             }
             if(msg.getCommand() == ShortMessage.NOTE_ON) {
-                List<Note> notes = decodedSequence.computeIfAbsent(event.getTick(), k -> new ArrayList<>());
+                long mcTick = event.getTick() / tickToMcTickRatio; //adapt midi ticks to mc ticks
+                List<Note> notes = decodedSequence.computeIfAbsent(mcTick, k -> new ArrayList<>());
                 notes.add(new
                         Note(Sounds.getSoundFromInstrumentNumber(channelArray[msg.getChannel()]), msg.getData1()));
                 return;
@@ -56,6 +59,10 @@ public class MidiFileReader {
             }
             pairList.add(new Pair<>(list.get(i).getValue(), new DelaysBox(list.get(i).getKey() - list.get(i - 1).getKey(), list.get(i).getValue().size())));
         }
+    }
+
+    private void computeTickToMcTickRatio(Sequence seq){
+        tickToMcTickRatio = (int) (seq.getTickLength() / (seq.getMicrosecondLength() * 1e-5));
     }
 
 }

@@ -16,8 +16,9 @@ import java.util.List;
 
 class BuildRunnable extends BukkitRunnable {
 
+    private final int iterationOffset = 10;
     private int currentStartingIndex = 0;
-    private int currentEndingIndex = 20;
+    private int currentEndingIndex = iterationOffset;
     private final List<Pair<List<Note>, DelaysBox>> song;
     private final BlockManager blockManager;
     private final Location placeToStartBuilding;
@@ -35,7 +36,7 @@ class BuildRunnable extends BukkitRunnable {
     public void run() {
         for(Pair<List<Note>, DelaysBox> p:song.subList(currentStartingIndex, currentEndingIndex < song.size() ? currentEndingIndex : song.size() - 1)){
             Pair<Integer, Integer> redstoneCircuitData = p.getSecond().getRedstoneCircuitData();
-            if(redstoneCircuitData.getFirst() > 0 | redstoneCircuitData.getSecond() != 0) {
+            if(redstoneCircuitData.getFirst() > 0 || redstoneCircuitData.getSecond() != 0) {
                 for (int i = 0; i < redstoneCircuitData.getFirst(); i++) {
                     locOffset += 1;
                     blockManager.placeRepeater(
@@ -57,7 +58,7 @@ class BuildRunnable extends BukkitRunnable {
                 blockManager.placeRepeater(
                         blockManager.offsetLocationAccordingDirection(placeToStartBuilding, direction, locOffset),
                         0,
-                        StructureRotation.NONE
+                        blockManager.getRepeaterRotationFromDirection(direction)
                 );
             }
             locOffset += 1;
@@ -74,7 +75,7 @@ class BuildRunnable extends BukkitRunnable {
             }
         }
         currentStartingIndex = currentEndingIndex;
-        currentEndingIndex += 20;
+        currentEndingIndex += iterationOffset;
         if(currentStartingIndex >= song.size()){
             cancel();
         }
