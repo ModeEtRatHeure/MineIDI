@@ -1,4 +1,5 @@
 src/test/
+build_to_serv.bat
 
 # User-specific stuff
 .idea/

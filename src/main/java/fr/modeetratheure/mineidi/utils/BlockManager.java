@@ -54,9 +54,9 @@ public class BlockManager {
 
     public StructureRotation getRepeaterRotationFromDirection(Vector direction){
         if(Math.abs(direction.getX()) <= Math.abs(direction.getZ())){
-            return direction.getX() <= 0d ? StructureRotation.NONE : StructureRotation.CLOCKWISE_180;
+            return direction.getZ() >= 0d ? StructureRotation.NONE : StructureRotation.CLOCKWISE_180;
         }
-        return direction.getZ() <= 0d ? StructureRotation.CLOCKWISE_90 : StructureRotation.COUNTERCLOCKWISE_90;
+        return direction.getX() <= 0d ? StructureRotation.CLOCKWISE_90 : StructureRotation.COUNTERCLOCKWISE_90;
     }
 
     public BlockFace getBlockFaceFromDirection(Vector direction){
@@ -78,14 +78,15 @@ public class BlockManager {
     }
 
     public Location offsetLocationAccordingNormalDirection(Location loc, Vector direction, int offset){
-        Vector roundedDirection;
-        Vector directionBis = direction.clone().normalize();
-        if(Math.abs(directionBis.getX()) <= Math.abs(directionBis.getZ())){
-            roundedDirection = new Vector(directionBis.getX() * offset, 0, 0);
-        }else{
-            roundedDirection = new Vector(0, 0, directionBis.getZ() * offset);
-        }
-        return loc.clone().add(roundedDirection);
+        Vector directionBis = simplifyVector(direction);
+        directionBis.rotateAroundY(Math.PI/2);
+        return loc.clone().add(directionBis.multiply(offset));
+    }
+
+    public Vector simplifyVector(Vector vector){
+        double x = vector.getX();
+        double z = vector.getZ();
+        return Math.abs(x) > Math.abs(z) ? new Vector(x/Math.abs(x), 0, 0) : new Vector(0, 0, z/Math.abs(z));
     }
 
 }

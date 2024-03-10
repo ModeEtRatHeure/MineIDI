@@ -39,4 +39,33 @@ public class MidiReadTest {
         System.out.println(seq.getTickLength()/(seq.getMicrosecondLength()*1e-5));
     }
 
+    @Test
+    public void checkIfZeroDelaysInDelaysBox(){
+        try {
+            System.out.println("TEST");
+            new MidiFileReader().read("C:\\Users\\clair\\OneDrive\\Bureau\\Java\\serv 1.19.4\\plugins\\MineIDI\\songs\\test.mid")
+                    .forEach(e -> {
+                        if(e.getSecond().getDelay() == 0) {
+                            System.out.println("0 found");
+                        }
+                    });
+            System.out.println("POTC");
+            new MidiFileReader().read("C:\\Users\\clair\\OneDrive\\Bureau\\Java\\serv 1.19.4\\plugins\\MineIDI\\songs\\potc.mid")
+                    .forEach(e -> {
+                        if(e.getSecond().getDelay() == 0) {
+                            System.out.println("0 found");
+                        }
+                    });
+            System.out.println("QUEEN");
+            new MidiFileReader().read("C:\\Users\\clair\\OneDrive\\Bureau\\Java\\serv 1.19.4\\plugins\\MineIDI\\songs\\queen.mid")
+                    .forEach(e -> {
+                        if(e.getSecond().getDelay() == 0) {
+                            System.out.println("0 found");
+                        }
+                    });
+        } catch (InvalidMidiDataException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

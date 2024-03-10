@@ -62,13 +62,43 @@ class BuildRunnable extends BukkitRunnable {
                 );
             }
             locOffset += 1;
-            int noteBlockOffset = - (int) (p.getFirst().size() / 2); //pour placer la ligne de noteblock de manière relativement symétrique par rapport à la ligne de redstone
+            int noteBlockOffset = - p.getFirst().size() / 2; //pour placer la ligne de noteblock de manière relativement symétrique par rapport à la ligne de redstone
             Location noteLineLoc = blockManager.offsetLocationAccordingDirection(
                     placeToStartBuilding, direction, locOffset
             );
-            for(Note note:p.getFirst()){
-                placeNoteBlock(
+            for(Note ignored:p.getFirst()){
+                if(noteBlockOffset == 0){
+                    blockManager.placeRepeater(
+                            noteLineLoc,
+                            0,
+                            StructureRotation.NONE
+                    );
+                    noteBlockOffset += 1;
+                }
+                blockManager.placeRepeater(
                         blockManager.offsetLocationAccordingNormalDirection(noteLineLoc, direction, noteBlockOffset),
+                        0,
+                        StructureRotation.NONE
+                );
+                noteBlockOffset += 1;
+            }
+            locOffset += 1;
+            noteBlockOffset = - p.getFirst().size() / 2; //pour placer la ligne de noteblock de manière relativement symétrique par rapport à la ligne de redstone
+            noteLineLoc = blockManager.offsetLocationAccordingDirection(
+                    placeToStartBuilding, direction, locOffset
+            );
+            for(Note note:p.getFirst()){
+                if(noteBlockOffset == 0){
+                    blockManager.placeRepeater(
+                            noteLineLoc,
+                            0,
+                            StructureRotation.NONE
+                    );
+                    noteBlockOffset += 1;
+                }
+                placeNoteBlock(
+                        blockManager.offsetLocationAccordingNormalDirection(noteLineLoc, direction, noteBlockOffset)
+                                .add(new Vector(0, -1, 0)),
                         note
                 );
                 noteBlockOffset += 1;

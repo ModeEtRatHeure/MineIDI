@@ -28,7 +28,10 @@ public class SongBuilder {
     public void build(List<Pair<List<Note>, DelaysBox>> song, Location placeToStartBuilding){
         Vector direction = placeToStartBuilding.getDirection();
         blockManager = new BlockManager();
-        blockManager.placeButton(placeToStartBuilding, blockManager.getBlockFaceFromDirection(direction));
+        Location loc = placeToStartBuilding.clone().add(0, 2, 0);
+        blockManager.placeButton(loc, blockManager.getBlockFaceFromDirection(direction));
+        
+        blockManager.placeBlock(Material.STONE, blockManager.offsetLocationAccordingDirection(loc, direction, 1));
         new BuildRunnable(song, blockManager, placeToStartBuilding, direction).runTaskTimer(mineIDI, 0, 2);
     }
 
