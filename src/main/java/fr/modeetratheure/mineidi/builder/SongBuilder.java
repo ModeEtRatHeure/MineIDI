@@ -26,13 +26,12 @@ public class SongBuilder {
     }
 
     public void build(List<Pair<List<Note>, DelaysBox>> song, Location placeToStartBuilding){
-        Vector direction = placeToStartBuilding.getDirection();
         blockManager = new BlockManager();
-        Location loc = placeToStartBuilding.clone().add(0, 2, 0);
-        blockManager.placeButton(loc, blockManager.getBlockFaceFromDirection(direction));
-        
-        blockManager.placeBlock(Material.STONE, blockManager.offsetLocationAccordingDirection(loc, direction, 1));
-        new BuildRunnable(song, blockManager, placeToStartBuilding, direction).runTaskTimer(mineIDI, 0, 2);
+        Vector direction = blockManager.simplifyVector(placeToStartBuilding.getDirection());
+        blockManager.placeButton(placeToStartBuilding, blockManager.getBlockFaceFromDirection(direction));
+        Location newLoc = blockManager.offsetLocationAccordingDirection(placeToStartBuilding, direction, 1);
+        blockManager.placeRepeater(newLoc, 0, blockManager.getRepeaterRotationFromDirection(direction));
+        new BuildRunnable(song, blockManager, newLoc, direction).runTaskTimer(mineIDI, 0, 1);
     }
 
 }
